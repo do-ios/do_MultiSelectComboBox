@@ -10,12 +10,21 @@
 
 @class doMulPopListView;
 
+@protocol completeBtnDelegate <NSObject>
+@optional
+- (void) completeBtnDidClick:(doMulPopListView *)popListView;
+
+@end
+
 @protocol PopListViewDataSource <NSObject>
 @required
+
+
 
 - (UITableViewCell *)popListView:(doMulPopListView *)popListView cellForIndexPath:(NSIndexPath *)indexPath;
 
 - (NSInteger)popListView:(doMulPopListView *)popListView numberOfRowsInSection:(NSInteger)section;
+
 
 @end
 
@@ -28,6 +37,9 @@
 
 - (CGFloat)popListView:(doMulPopListView *)popListView heightForRowAtIndexPath:(NSIndexPath *)indexPath;
 
+- (UIView *)popListView:(doMulPopListView *)popListView viewForHeaderInSection:(NSInteger)section;
+
+- (CGFloat)popListView:(doMulPopListView *)popListView heightForHeaderInSection:(NSInteger)section;
 @end
 
 
@@ -38,8 +50,9 @@
     UIControl   *_overlayView;
 }
 
-@property (nonatomic, assign) id<PopListViewDataSource> datasource;
-@property (nonatomic, assign) id<PopListViewDelegate>   delegate;
+@property (nonatomic, weak) id<PopListViewDataSource> datasource;
+@property (nonatomic, weak) id<PopListViewDelegate>   delegate;
+@property (nonatomic, weak) id<completeBtnDelegate> btnDelegate;
 @property (nonatomic, strong) UITableView *listView;
 @property (nonatomic, assign) BOOL isDisplay;
 @property (nonatomic, assign) CGFloat cellHeight;

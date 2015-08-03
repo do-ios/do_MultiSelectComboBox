@@ -32,6 +32,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         [self defalutInit];
+        _listView.allowsMultipleSelection =YES;
     }
     return self;
 }
@@ -44,18 +45,26 @@
     self.clipsToBounds = YES;
 
     CGFloat xWidth = self.bounds.size.width;
-    
-    CGRect tableFrame = CGRectMake(0, 0, xWidth, self.bounds.size.height);
+    CGRect tableFrame = CGRectMake(0, 60, xWidth, self.bounds.size.height);
     _listView = [[UITableView alloc] initWithFrame:tableFrame style:UITableViewStylePlain];
     _listView.dataSource = self;
     _listView.delegate = self;
     [self addSubview:_listView];
-
+    _listView.contentInset = UIEdgeInsetsMake(0, 0, 60, 0);
     _overlayView = [[UIControl alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     _overlayView.backgroundColor = [UIColor colorWithRed:.16 green:.17 blue:.21 alpha:.5];
     [_overlayView addTarget:self action:@selector(dismiss) forControlEvents:UIControlEventTouchUpInside];
 }
-
+- (void)layoutSubviews
+{
+    UIButton *headerBtn = [[UIButton alloc]init];
+    headerBtn.frame = CGRectMake(0, 0, self.frame.size.width,60);
+    [headerBtn setTitle:@"确定" forState:UIControlStateNormal];
+    [headerBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    headerBtn.backgroundColor = [UIColor whiteColor];
+    [headerBtn addTarget:self action:@selector(btnComp:) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:headerBtn];
+}
 - (void)setCellHeight:(CGFloat)cellHeight
 {
     _listView.rowHeight = cellHeight;
@@ -107,6 +116,27 @@
     return nil;
 }
 
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    if (self.delegate && [self.delegate respondsToSelector:@selector(popListView:viewForHeaderInSection:)]) {
+        [self.delegate popListView:self viewForHeaderInSection:section];
+    }
+    return nil;
+
+}
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    if (self.delegate && [self.delegate respondsToSelector:@selector(popListView:heightForHeaderInSection:)]) {
+        [self.delegate popListView:self heightForHeaderInSection:section];
+    }
+    return 0.0;
+}
+- (void)btnComp:(UIButton *)sender
+{
+    if ([self.btnDelegate respondsToSelector:@selector(completeBtnDidClick:)]) {
+        [self.btnDelegate completeBtnDidClick:self];
+    }
+}
 #pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -116,7 +146,6 @@
     {
         [self.delegate popListView:self didSelectIndexPath:indexPath];
     }
-    [self dismiss];
 }
 
 #pragma mark - animations
