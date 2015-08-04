@@ -116,21 +116,6 @@
     return nil;
 }
 
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
-{
-    if (self.delegate && [self.delegate respondsToSelector:@selector(popListView:viewForHeaderInSection:)]) {
-        [self.delegate popListView:self viewForHeaderInSection:section];
-    }
-    return nil;
-
-}
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
-{
-    if (self.delegate && [self.delegate respondsToSelector:@selector(popListView:heightForHeaderInSection:)]) {
-        [self.delegate popListView:self heightForHeaderInSection:section];
-    }
-    return 0.0;
-}
 - (void)btnComp:(UIButton *)sender
 {
     if ([self.btnDelegate respondsToSelector:@selector(completeBtnDidClick:)]) {
@@ -147,7 +132,12 @@
         [self.delegate popListView:self didSelectIndexPath:indexPath];
     }
 }
-
+- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (self.delegate && [self.delegate respondsToSelector:@selector(popListView:didDeselectRowAtIndexPath:)]) {
+        [self.delegate popListView:self didDeselectRowAtIndexPath:indexPath];
+    }
+}
 #pragma mark - animations
 
 - (void)fadeIn

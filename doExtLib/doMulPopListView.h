@@ -32,14 +32,11 @@
 @optional
 
 - (void)popListView:(doMulPopListView *)popListView didSelectIndexPath:(NSIndexPath *)indexPath;
+- (void)popListView:(doMulPopListView *)popListView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath;
 
 - (void)popListViewCancel:(doMulPopListView *)popListView;
 
 - (CGFloat)popListView:(doMulPopListView *)popListView heightForRowAtIndexPath:(NSIndexPath *)indexPath;
-
-- (UIView *)popListView:(doMulPopListView *)popListView viewForHeaderInSection:(NSInteger)section;
-
-- (CGFloat)popListView:(doMulPopListView *)popListView heightForHeaderInSection:(NSInteger)section;
 @end
 
 

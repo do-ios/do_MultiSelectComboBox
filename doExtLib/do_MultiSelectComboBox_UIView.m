@@ -32,6 +32,7 @@
     UIColor *_fontColor;
     NSString *_fontStyle;
     NSString *_myFontFlag;
+    NSArray *_indexs;
 }
 @synthesize currentIndex = _currentIndex;
 #pragma mark - doIUIModuleView协议方法（必须）
@@ -40,6 +41,7 @@
 {
     _model = (typeof(_model)) _doUIModule;
     _items = [NSMutableArray array];
+    _indexs = [NSArray array];
     self.userInteractionEnabled = YES;
     [self change_fontColor:[_model GetProperty:@"fontColor"].DefaultValue];
     [self change_indexs:[_model GetProperty:@"indexs"].DefaultValue];
@@ -55,6 +57,7 @@
     [_items removeAllObjects];
     _items = nil;
     _model = nil;
+    _indexs = nil;
     //自定义的全局属性,view-model(UIModel)类销毁时会递归调用<子view-model(UIModel)>的该方法，将上层的引用切断。所以如果self类有非原生扩展，需主动调用view-model(UIModel)的该方法。(App || Page)-->强引用-->view-model(UIModel)-->强引用-->view
 }
 //实现布局
@@ -167,16 +170,7 @@
 - (void)change_indexs:(NSString *)newValue
 {
     //自己的代码实现
-//    NSInteger num = [newValue integerValue];
-//    _currentIndex = num;
-//    _popListView.index = self.currentIndex;
-//    [self resetContent];
-    NSArray *indexArray = [newValue componentsSeparatedByString:@","];
-    for (NSString *index in indexArray) {
-        int i = [[doTextHelper alloc]StrToInt:index :-1];
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
-        [_popListView.listView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionTop];
-    }
+    _indexs = [newValue componentsSeparatedByString:@","];
 }
 - (NSInteger)currentIndex
 {
@@ -196,7 +190,6 @@
     _items = [NSMutableArray arrayWithArray:[newValue componentsSeparatedByString:@","]];
     _popListView.items = _items;
     
-    [self change_indexs:[@(_currentIndex) stringValue]];
     [self resetContent];
     
     CGFloat fontSize = self.titleLabel.font.pointSize;
@@ -208,7 +201,10 @@
 }
 - (void)change_text:(NSString *)newValue
 {
-    
+    [self setTitle:newValue forState:UIControlStateNormal];
+    CGFloat fontSize = self.titleLabel.font.pointSize;
+    [self setFontStyle:self.titleLabel :fontSize];
+    [self setTextFlag:self.titleLabel :fontSize];
 }
 
 - (void)resetContent
@@ -275,9 +271,17 @@
         label.tag = 999;
         [cell.contentView addSubview:label];
     }
-    cell.accessoryView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"do_MultiSelectComboBox.bundle/check_off"] highlightedImage:[UIImage imageNamed:@"do_MultiSelectComboBox.bundle/check_on"]];
-    cell.selectedBackgroundView = [[UIView alloc]initWithFrame:cell.frame];
-    cell.selectedBackgroundView.backgroundColor = [UIColor clearColor];
+    cell.accessoryView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"do_MultiSelectComboBox.bundle/check_off"]];
+
+    NSString *rowStr = [NSString stringWithFormat:@"%ld",(long)indexPath.row];
+    NSLog(@"%@",rowStr);
+    
+    if ([_indexs containsObject:rowStr]) {
+        cell.accessoryView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"do_MultiSelectComboBox.bundle/check_on"]];
+        [popoverListView.listView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionTop];
+    }
+//    cell.selectedBackgroundView = [[UIView alloc]initWithFrame:cell.frame];
+//    cell.selectedBackgroundView.backgroundColor = [UIColor clearColor];
     UILabel *label = (UILabel *)[cell.contentView viewWithTag:999];
     label.font = [UIFont systemFontOfSize:_fontSize];
     label.textColor = _fontColor;
@@ -299,21 +303,16 @@
 - (void)popListView:(doMulPopListView *)popListView didSelectIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell  = [popListView.listView cellForRowAtIndexPath:indexPath];
-    UILabel *label = (UILabel *)[cell.contentView viewWithTag:999];
-    [self setTitle:label.text forState:UIControlStateNormal];
-//    doInvokeResult *_invokeResult = [[doInvokeResult alloc] init:_model.UniqueKey];
-//    [_invokeResult SetResultInteger:(int)indexPath.row];
-//    [_model.EventCenter FireEvent:@"selectChanged" :_invokeResult];
+    if (cell.isSelected) {
+        cell.accessoryView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"do_MultiSelectComboBox.bundle/check_on"]];
+    }
 }
--(UIView *)popListView:(doMulPopListView *)popListView viewForHeaderInSection:(NSInteger)section
+- (void)popListView:(doMulPopListView *)popListView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 200, 80)];
-    view.backgroundColor = [UIColor greenColor];
-    return view;
-}
-- (CGFloat)popListView:(doMulPopListView *)popListView heightForHeaderInSection:(NSInteger)section
-{
-    return 220;
+    UITableViewCell *cell  = [popListView.listView cellForRowAtIndexPath:indexPath];
+    if (!cell.isSelected) {
+        cell.accessoryView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"do_MultiSelectComboBox.bundle/check_off"]];
+    }
 }
 - (void)completeBtnDidClick:(doMulPopListView *)popListView
 {
