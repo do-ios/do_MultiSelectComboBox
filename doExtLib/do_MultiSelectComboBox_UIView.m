@@ -33,6 +33,7 @@
     NSString *_fontStyle;
     NSString *_myFontFlag;
     NSArray *_indexs;
+    NSString *_currentIndexsStr;
 }
 @synthesize currentIndex = _currentIndex;
 #pragma mark - doIUIModuleView协议方法（必须）
@@ -170,7 +171,20 @@
 - (void)change_indexs:(NSString *)newValue
 {
     //自己的代码实现
+    if (newValue.length == 0) {
+        return;
+    }
+    _currentIndexsStr = newValue;
     _indexs = [newValue componentsSeparatedByString:@","];
+    NSMutableArray *changeIndex = [NSMutableArray array];
+    for (NSString * index in _indexs) {
+        if (0 <=[index integerValue] && [index integerValue] <= _items.count) {
+            [changeIndex addObject:index];
+        }
+    }
+    doInvokeResult *_invokeResult = [[doInvokeResult alloc] init:_model.UniqueKey];
+    [_invokeResult SetResultArray:changeIndex];
+    [_model.EventCenter FireEvent:@"selectChanged" :_invokeResult];
 }
 - (NSInteger)currentIndex
 {
@@ -190,8 +204,8 @@
     _items = [NSMutableArray arrayWithArray:[newValue componentsSeparatedByString:@","]];
     _popListView.items = _items;
     
-    [self resetContent];
-    
+//    [self resetContent];
+    [self change_indexs:_currentIndexsStr];
     CGFloat fontSize = self.titleLabel.font.pointSize;
     [self setFontStyle:self.titleLabel :fontSize];
     [self setTextFlag:self.titleLabel :fontSize];
@@ -267,7 +281,7 @@
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
                                       reuseIdentifier:identifier];
-        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(20, 10, CGRectGetWidth(cell.contentView.frame)-40, CGRectGetHeight(cell.contentView.frame)-20)];
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(20, 10, CGRectGetWidth(cell.contentView.frame)-30, CGRectGetHeight(cell.contentView.frame)-10)];
         label.tag = 999;
         [cell.contentView addSubview:label];
     }
@@ -303,6 +317,11 @@
 - (void)popListView:(doMulPopListView *)popListView didSelectIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell  = [popListView.listView cellForRowAtIndexPath:indexPath];
+    UILabel *label = (UILabel *)[cell.contentView viewWithTag:999];
+//    [self setTitle:label.text forState:UIControlStateNormal];
+    CGFloat fontSize = label.font.pointSize;
+    [self setFontStyle:self.titleLabel :fontSize];
+    [self setTextFlag:self.titleLabel :fontSize];
     if (cell.isSelected) {
         cell.accessoryView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"do_MultiSelectComboBox.bundle/check_on"]];
     }
@@ -310,6 +329,11 @@
 - (void)popListView:(doMulPopListView *)popListView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell  = [popListView.listView cellForRowAtIndexPath:indexPath];
+    UILabel *label = (UILabel *)[cell.contentView viewWithTag:999];
+//    [self setTitle:label.text forState:UIControlStateNormal];
+    CGFloat fontSize = label.font.pointSize;
+    [self setFontStyle:self.titleLabel :fontSize];
+    [self setTextFlag:self.titleLabel :fontSize];
     if (!cell.isSelected) {
         cell.accessoryView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"do_MultiSelectComboBox.bundle/check_off"]];
     }
