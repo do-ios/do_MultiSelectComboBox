@@ -74,6 +74,17 @@
     _popListView.delegate = self;
     _popListView.datasource = self;
     _popListView.btnDelegate = self;
+    
+    UIImage *image = [UIImage imageNamed:@"do_MultiSelectComboBox.bundle/icon_combo"];
+    CGRect r = self.bounds;
+    CGFloat h = CGRectGetHeight(r);
+    CGFloat w = CGRectGetWidth(r);
+    CGRect frame = CGRectMake(w-h*0.1, h*0.9, h*0.1, h*0.1);
+    UIImageView *icon = [[UIImageView alloc] initWithFrame:frame];
+    icon.image = image;
+    
+    [self addSubview:icon];
+
 }
 
 - (void)drawRect:(CGRect)rect
