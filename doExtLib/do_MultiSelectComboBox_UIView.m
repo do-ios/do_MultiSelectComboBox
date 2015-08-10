@@ -178,7 +178,7 @@
     _indexs = [newValue componentsSeparatedByString:@","];
     NSMutableArray *changeIndex = [NSMutableArray array];
     for (NSString * index in _indexs) {
-        if (0 <=[index integerValue] && [index integerValue] <= _items.count) {
+        if (0 <=[index integerValue] && [index integerValue] <= _items.count && ![index isEqualToString:@""]) {
             [changeIndex addObject:index];
         }
     }
@@ -204,7 +204,10 @@
     _items = [NSMutableArray arrayWithArray:[newValue componentsSeparatedByString:@","]];
     _popListView.items = _items;
     
-//    [self resetContent];
+    //手动触发indexs方法
+    if (!_currentIndexsStr || [_currentIndexsStr isEqualToString:@""]) {
+        _currentIndexsStr = @"0,";
+    }
     [self change_indexs:_currentIndexsStr];
     CGFloat fontSize = self.titleLabel.font.pointSize;
     [self setFontStyle:self.titleLabel :fontSize];
