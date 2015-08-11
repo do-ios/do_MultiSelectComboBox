@@ -32,7 +32,7 @@
     UIColor *_fontColor;
     NSString *_fontStyle;
     NSString *_myFontFlag;
-    NSArray *_indexs;
+    NSMutableArray *_indexs;
     NSString *_currentIndexsStr;
 }
 @synthesize currentIndex = _currentIndex;
@@ -42,7 +42,7 @@
 {
     _model = (typeof(_model)) _doUIModule;
     _items = [NSMutableArray array];
-    _indexs = [NSArray array];
+    _indexs = [NSMutableArray array];
     self.userInteractionEnabled = YES;
     [self change_fontColor:[_model GetProperty:@"fontColor"].DefaultValue];
     [self change_indexs:[_model GetProperty:@"indexs"].DefaultValue];
@@ -87,25 +87,25 @@
 
 }
 
-- (void)drawRect:(CGRect)rect
-{
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    
-    CGContextSetFillColorWithColor(context, [UIColor blackColor].CGColor);
-    CGContextSetLineWidth(context, .1);
-    
-    CGPoint sPoints[3];
-    CGFloat h = CGRectGetHeight(rect);
-    CGFloat w = CGRectGetWidth(rect);
-    sPoints[0] =CGPointMake(w-h*0.1, h);
-    sPoints[1] =CGPointMake(w, h-h*0.1);
-    sPoints[2] =CGPointMake(w, h);
-    
-    CGContextAddLines(context, sPoints, 3);
-    
-    CGContextClosePath(context);
-    CGContextDrawPath(context, kCGPathFill);
-}
+//- (void)drawRect:(CGRect)rect
+//{
+//    CGContextRef context = UIGraphicsGetCurrentContext();
+//    
+//    CGContextSetFillColorWithColor(context, [UIColor blackColor].CGColor);
+//    CGContextSetLineWidth(context, .1);
+//    
+//    CGPoint sPoints[3];
+//    CGFloat h = CGRectGetHeight(rect);
+//    CGFloat w = CGRectGetWidth(rect);
+//    sPoints[0] =CGPointMake(w-h*0.1, h);
+//    sPoints[1] =CGPointMake(w, h-h*0.1);
+//    sPoints[2] =CGPointMake(w, h);
+//    
+//    CGContextAddLines(context, sPoints, 3);
+//    
+//    CGContextClosePath(context);
+//    CGContextDrawPath(context, kCGPathFill);
+//}
 #pragma mark - TYPEID_IView协议方法（必须）
 #pragma mark - Changed_属性
 /*
@@ -186,7 +186,9 @@
         return;
     }
     _currentIndexsStr = newValue;
-    _indexs = [newValue componentsSeparatedByString:@","];
+    NSArray *tempArray =[newValue componentsSeparatedByString:@","];
+
+    _indexs = [NSMutableArray arrayWithArray:tempArray];
     NSMutableArray *changeIndex = [NSMutableArray array];
     for (NSString * index in _indexs) {
         if (0 <=[index integerValue] && [index integerValue] <= _items.count && ![index isEqualToString:@""]) {
@@ -217,13 +219,12 @@
     
     //手动触发indexs方法
     if (!_currentIndexsStr || [_currentIndexsStr isEqualToString:@""]) {
-        _currentIndexsStr = @"0,";
+        _currentIndexsStr = @",";
     }
     [self change_indexs:_currentIndexsStr];
     CGFloat fontSize = self.titleLabel.font.pointSize;
     [self setFontStyle:self.titleLabel :fontSize];
     [self setTextFlag:self.titleLabel :fontSize];
-    
     [self resetPoplist];
     _popListView.index = self.currentIndex;
 }
@@ -300,7 +301,7 @@
         [cell.contentView addSubview:label];
     }
     cell.accessoryView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"do_MultiSelectComboBox.bundle/check_off"]];
-
+    NSLog(@"accessoryView = %@",cell.accessoryView);
     NSString *rowStr = [NSString stringWithFormat:@"%ld",(long)indexPath.row];
     NSLog(@"%@",rowStr);
     
@@ -330,6 +331,8 @@
 #pragma mark - UIPopoverListViewDelegate
 - (void)popListView:(doMulPopListView *)popListView didSelectIndexPath:(NSIndexPath *)indexPath
 {
+    NSString *rowStr = [NSString stringWithFormat:@"%ld",(long)indexPath.row];
+    [_indexs addObject:rowStr];
     UITableViewCell *cell  = [popListView.listView cellForRowAtIndexPath:indexPath];
     UILabel *label = (UILabel *)[cell.contentView viewWithTag:999];
 //    [self setTitle:label.text forState:UIControlStateNormal];
@@ -342,6 +345,8 @@
 }
 - (void)popListView:(doMulPopListView *)popListView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    NSString *rowStr = [NSString stringWithFormat:@"%ld",(long)indexPath.row];
+    [_indexs removeObject:rowStr];
     UITableViewCell *cell  = [popListView.listView cellForRowAtIndexPath:indexPath];
     UILabel *label = (UILabel *)[cell.contentView viewWithTag:999];
 //    [self setTitle:label.text forState:UIControlStateNormal];
