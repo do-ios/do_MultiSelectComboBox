@@ -307,7 +307,7 @@
     
     if ([_indexs containsObject:rowStr]) {
         cell.accessoryView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"do_MultiSelectComboBox.bundle/check_on"]];
-        [popoverListView.listView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionTop];
+        [popoverListView.listView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
     }
 //    cell.selectedBackgroundView = [[UIView alloc]initWithFrame:cell.frame];
 //    cell.selectedBackgroundView.backgroundColor = [UIColor clearColor];
