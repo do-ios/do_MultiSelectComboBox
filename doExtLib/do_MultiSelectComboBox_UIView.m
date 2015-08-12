@@ -195,6 +195,9 @@
             [changeIndex addObject:index];
         }
     }
+    if (_items.count == 0) {
+        return;
+    }
     doInvokeResult *_invokeResult = [[doInvokeResult alloc] init:_model.UniqueKey];
     [_invokeResult SetResultArray:changeIndex];
     [_model.EventCenter FireEvent:@"selectChanged" :_invokeResult];
@@ -365,7 +368,11 @@
     for (NSIndexPath *indexPath in selCells) {
         [cells addObject:[NSString stringWithFormat:@"%ld",(long)indexPath.row]];
     }
-
+    NSMutableString *indexsStr = [NSMutableString string];
+    for (NSString * index in cells) {
+        [indexsStr appendString:[NSString stringWithFormat:@"%@,",index]];
+    }
+    [_model SetPropertyValue:@"indexs" :indexsStr];
     doInvokeResult *_invokeResult = [[doInvokeResult alloc] init:_model.UniqueKey];
     [_invokeResult SetResultArray:cells];
      [_model.EventCenter FireEvent:@"selectChanged" :_invokeResult];
