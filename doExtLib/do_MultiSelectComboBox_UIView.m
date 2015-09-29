@@ -116,7 +116,21 @@
  NSString *属性名 = [(doUIModule *)_model GetProperty:@"属性名"].DefaultValue;
  */
 
-
+- (void)change_textAlign:(NSString *)newValue
+{
+    
+    if ([newValue isEqualToString:@"left"]) {
+        [self setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
+    }
+    else if ([newValue isEqualToString:@"center"])
+    {
+        [self setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
+    }
+    else if([newValue isEqualToString:@"right"])
+    {
+        [self setContentHorizontalAlignment:UIControlContentHorizontalAlignmentCenter];
+    }
+}
 - (void)change_fontColor:(NSString *)newValue
 {
     //自己的代码实现

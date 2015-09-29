@@ -19,6 +19,7 @@
 - (void)change_items:(NSString *)newValue;
 - (void)change_text:(NSString *)newValue;
 - (void)change_textFlag:(NSString *)newValue;
+- (void)change_textAlign:(NSString *)newValue;
 
 //同步或异步方法
 
