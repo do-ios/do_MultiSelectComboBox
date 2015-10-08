@@ -34,6 +34,8 @@
     NSString *_myFontFlag;
     NSMutableArray *_indexs;
     NSString *_currentIndexsStr;
+    //对齐标识
+    NSInteger _alignFlag;
 }
 @synthesize currentIndex = _currentIndex;
 #pragma mark - doIUIModuleView协议方法（必须）
@@ -87,25 +89,6 @@
 
 }
 
-//- (void)drawRect:(CGRect)rect
-//{
-//    CGContextRef context = UIGraphicsGetCurrentContext();
-//    
-//    CGContextSetFillColorWithColor(context, [UIColor blackColor].CGColor);
-//    CGContextSetLineWidth(context, .1);
-//    
-//    CGPoint sPoints[3];
-//    CGFloat h = CGRectGetHeight(rect);
-//    CGFloat w = CGRectGetWidth(rect);
-//    sPoints[0] =CGPointMake(w-h*0.1, h);
-//    sPoints[1] =CGPointMake(w, h-h*0.1);
-//    sPoints[2] =CGPointMake(w, h);
-//    
-//    CGContextAddLines(context, sPoints, 3);
-//    
-//    CGContextClosePath(context);
-//    CGContextDrawPath(context, kCGPathFill);
-//}
 #pragma mark - TYPEID_IView协议方法（必须）
 #pragma mark - Changed_属性
 /*
@@ -121,14 +104,17 @@
     
     if ([newValue isEqualToString:@"left"]) {
         [self setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
+        _alignFlag = 0;
     }
     else if ([newValue isEqualToString:@"center"])
     {
-        [self setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
+        [self setContentHorizontalAlignment:UIControlContentHorizontalAlignmentCenter];
+        _alignFlag = 1;
     }
     else if([newValue isEqualToString:@"right"])
     {
-        [self setContentHorizontalAlignment:UIControlContentHorizontalAlignmentCenter];
+        [self setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
+        _alignFlag = 2;
     }
 }
 - (void)change_fontColor:(NSString *)newValue
@@ -313,8 +299,15 @@
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
                                       reuseIdentifier:identifier];
-        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(20, 10, CGRectGetWidth(cell.contentView.frame)-30, CGRectGetHeight(cell.contentView.frame)-10)];
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(20, 10, CGRectGetWidth(cell.contentView.frame)-120, CGRectGetHeight(cell.contentView.frame)-10)];
         label.tag = 999;
+        if (_alignFlag == 1) {
+            label.textAlignment = NSTextAlignmentCenter;
+        }
+        else if(_alignFlag == 2)
+        {
+            label.textAlignment = NSTextAlignmentRight;
+        }
         [cell.contentView addSubview:label];
     }
     cell.accessoryView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"do_MultiSelectComboBox.bundle/check_off"]];
@@ -326,8 +319,6 @@
         cell.accessoryView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"do_MultiSelectComboBox.bundle/check_on"]];
         [popoverListView.listView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
     }
-//    cell.selectedBackgroundView = [[UIView alloc]initWithFrame:cell.frame];
-//    cell.selectedBackgroundView.backgroundColor = [UIColor clearColor];
     UILabel *label = (UILabel *)[cell.contentView viewWithTag:999];
     label.font = [UIFont systemFontOfSize:_fontSize];
     label.textColor = _fontColor;
