@@ -46,6 +46,7 @@
     _items = [NSMutableArray array];
     _indexs = [NSMutableArray array];
     self.userInteractionEnabled = YES;
+    [self setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
     [self change_fontColor:[_model GetProperty:@"fontColor"].DefaultValue];
     [self change_indexs:[_model GetProperty:@"indexs"].DefaultValue];
     [self change_fontStyle:[_model GetProperty:@"fontStyle"].DefaultValue];
@@ -299,7 +300,7 @@
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
                                       reuseIdentifier:identifier];
-        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(20, 10, CGRectGetWidth(cell.contentView.frame)-120, CGRectGetHeight(cell.contentView.frame)-10)];
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(20, 10, CGRectGetWidth([UIScreen mainScreen].bounds)-120, CGRectGetHeight(cell.frame)-10)];
         label.tag = 999;
         if (_alignFlag == 1) {
             label.textAlignment = NSTextAlignmentCenter;
