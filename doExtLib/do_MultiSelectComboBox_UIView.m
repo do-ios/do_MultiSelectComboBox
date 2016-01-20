@@ -16,6 +16,9 @@
 #import "doTextHelper.h"
 #import "doDefines.h"
 #import "DoTextHelper.h"
+#import "doJsonHelper.h"
+#import "doServiceContainer.h"
+#import "doILogEngine.h"
 
 #define FONT_OBLIQUITY 15.0
 #define CELL_HEIGHT 60.0f
@@ -36,6 +39,8 @@
     NSString *_currentIndexsStr;
     //对齐标识
     NSInteger _alignFlag;
+    
+    id<doIListData> _dataArrays;
 }
 @synthesize currentIndex = _currentIndex;
 #pragma mark - doIUIModuleView协议方法（必须）
@@ -199,6 +204,7 @@
     if (_items.count == 0) {
         return;
     }
+//    _popListView.indexs = changeIndex;
     doInvokeResult *_invokeResult = [[doInvokeResult alloc] init:_model.UniqueKey];
     [_invokeResult SetResultArray:changeIndex];
     [_model.EventCenter FireEvent:@"selectChanged" :_invokeResult];
@@ -290,7 +296,44 @@
         [_popListView dismiss];
     }
 }
-
+#pragma mark -
+#pragma mark - 同步异步方法的实现
+//同步
+- (void)bindItems:(NSArray *)parms
+{
+    NSDictionary * _dictParas = [parms objectAtIndex:0];
+    id<doIScriptEngine> _scriptEngine = [parms objectAtIndex:1];
+    NSString* _address = [doJsonHelper GetOneText: _dictParas :@"data": nil];
+    @try {
+        if (_address == nil || _address.length <= 0) [NSException raise:@"doCombox" format:@"未指定相关的doCombox data参数！",nil];
+        id bindingModule = [doScriptEngineHelper ParseMultitonModule: _scriptEngine : _address];
+        if (bindingModule == nil) [NSException raise:@"doCombox" format:@"data参数无效！",nil];
+        if([bindingModule conformsToProtocol:@protocol(doIListData)])
+        {
+            if(_dataArrays!= bindingModule)
+                _dataArrays = bindingModule;
+            if ([_dataArrays GetCount]>0) {
+                [self refreshItems:parms];
+            }
+        }
+        
+    }
+    @catch (NSException *exception) {
+        [[doServiceContainer Instance].LogEngine WriteError:exception :exception.description];
+        doInvokeResult* _result = [[doInvokeResult alloc]init];
+        [_result SetException:exception];
+        
+    }
+    
+}
+- (void)refreshItems:(NSArray *)parms
+{
+    for (int i = 0; i < [_dataArrays GetCount]; i ++) {
+        if (![_items containsObject:[_dataArrays GetData:i]]) {
+            [_items addObject:[_dataArrays GetData:i]];
+        }
+    }
+}
 #pragma mark - UIPopoverListViewDataSource
 
 - (UITableViewCell *)popListView:(doMulPopListView *)popoverListView cellForIndexPath:(NSIndexPath *)indexPath

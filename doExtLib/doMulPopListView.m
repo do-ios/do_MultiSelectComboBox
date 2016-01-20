@@ -75,7 +75,14 @@
     _items = [items mutableCopy];
     [_listView reloadData];
 }
-
+- (void)setIndexs:(NSArray *)indexs
+{
+    for (NSString *index in indexs)
+    {
+        NSIndexPath *indexpath = [[NSIndexPath alloc]initWithIndex:[index integerValue] ];
+        [_listView selectRowAtIndexPath:indexpath animated:NO scrollPosition:UITableViewScrollPositionNone];
+    }
+}
 #pragma mark - property
 - (void)setIndex:(NSInteger)newValue
 {

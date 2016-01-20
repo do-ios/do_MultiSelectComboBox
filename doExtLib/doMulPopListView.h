@@ -58,6 +58,8 @@
 
 @property (nonatomic, assign) NSInteger index;
 
+@property (nonatomic, strong) NSArray *indexs;
+
 
 - (void)setTitle:(NSString *)title;
 - (void)reload;
