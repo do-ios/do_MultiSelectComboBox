@@ -191,13 +191,12 @@
                      "ReturnType": "",
                      "ReturnDesc": "",
                      "Paras": [
-                               {
                                "ID": "data",
                                "Name": "数据",
                                "Type": "Node",
                                "Required": 0,
                                "DefaultValue": "",
-                               "Description": ""
+                               "Description": "比如[{'text':'a1','id':'1'},{'text':'a2','id':'2'}]，其中text字段是必须的，用于显示文本内容，这里显示的就是a1，a2，其他字段可任意增加，根据选择的item索引获取内容"
                                }
                                ]
                      },

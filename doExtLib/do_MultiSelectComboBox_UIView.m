@@ -328,11 +328,15 @@
 }
 - (void)refreshItems:(NSArray *)parms
 {
+    //清空数据
+    [_items removeAllObjects];
     for (int i = 0; i < [_dataArrays GetCount]; i ++) {
-        if (![_items containsObject:[_dataArrays GetData:i]]) {
-            [_items addObject:[_dataArrays GetData:i]];
+        NSString *text = [doJsonHelper GetText:[_dataArrays GetData:i] :@"text"];
+        if (![_items containsObject:text]) {
+            [_items addObject:text];
         }
-    }
+    }    _popListView.items = _items;
+    [self resetPoplist];
 }
 #pragma mark - UIPopoverListViewDataSource
 
