@@ -224,6 +224,7 @@
 - (void)change_items:(NSString *)newValue
 {
     //自己的代码实现
+    [_items removeAllObjects];
     _items = [NSMutableArray arrayWithArray:[newValue componentsSeparatedByString:@","]];
     _popListView.items = _items;
     
@@ -426,6 +427,7 @@
         [indexsStr appendString:[NSString stringWithFormat:@"%@,",index]];
     }
     [_model SetPropertyValue:@"indexs" :indexsStr];
+    _currentIndexsStr = indexsStr;
     doInvokeResult *_invokeResult = [[doInvokeResult alloc] init:_model.UniqueKey];
     [_invokeResult SetResultArray:cells];
      [_model.EventCenter FireEvent:@"selectChanged" :_invokeResult];
