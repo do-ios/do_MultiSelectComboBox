@@ -79,15 +79,30 @@
 {
     for (NSString *index in indexs)
     {
-        NSIndexPath *indexpath = [[NSIndexPath alloc]initWithIndex:[index integerValue] ];
+        NSInteger index1 = [index integerValue];
+        index1 = [self index1:index1];
+        NSIndexPath *indexpath = [[NSIndexPath alloc]initWithIndex:index1];
         [_listView selectRowAtIndexPath:indexpath animated:NO scrollPosition:UITableViewScrollPositionNone];
     }
 }
 #pragma mark - property
 - (void)setIndex:(NSInteger)newValue
 {
+    newValue = [self index1:newValue];
     NSIndexPath *index = [NSIndexPath indexPathForRow:newValue inSection:0];
     [_listView scrollToRowAtIndexPath:index atScrollPosition:UITableViewScrollPositionTop animated:NO];
+}
+
+- (NSInteger)index1:(NSInteger)index1
+{
+    if ([self numbers]>0) {
+        if (index1<0||index1>[self numbers]-1) {
+            index1 = [self numbers]-1;
+        }
+    }else
+        index1 = NSNotFound;
+    
+    return index1;
 }
 
 - (void)reload
@@ -96,6 +111,16 @@
 }
 
 #pragma mark - UITableViewDataSource
+- (NSInteger)numbers
+{
+    if(self.datasource &&
+       [self.datasource respondsToSelector:@selector(popListView:numberOfRowsInSection:)])
+    {
+        return [self.datasource popListView:self numberOfRowsInSection:0];
+    }
+    
+    return 0;
+}
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -104,13 +129,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if(self.datasource &&
-       [self.datasource respondsToSelector:@selector(popListView:numberOfRowsInSection:)])
-    {
-        return [self.datasource popListView:self numberOfRowsInSection:section];
-    }
-    
-    return 0;
+    return [self numbers];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
