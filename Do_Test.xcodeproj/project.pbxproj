@@ -13,6 +13,9 @@
 		3BD366451B6EF75E004056FD /* do_MultiSelectComboBox_UIModel.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3BD366321B6EF0FA004056FD /* do_MultiSelectComboBox_UIModel.h */; };
 		3BD366461B6EF75E004056FD /* do_MultiSelectComboBox_UIView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3BD366341B6EF0FA004056FD /* do_MultiSelectComboBox_UIView.h */; };
 		3BD3664F1B6EFA99004056FD /* doMulPopListView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BD3664E1B6EFA99004056FD /* doMulPopListView.m */; };
+		7744CCEF1D4AFEFE00150CAA /* do_MultiSelectComboBox.bundle in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3BD366401B6EF706004056FD /* do_MultiSelectComboBox.bundle */; };
+		778B2BBF1D48C08B00F76D4F /* do_MultiSelectComboBox_UIModel.h in Resources */ = {isa = PBXBuildFile; fileRef = 3BD366321B6EF0FA004056FD /* do_MultiSelectComboBox_UIModel.h */; };
+		778B2BC01D48C08B00F76D4F /* do_MultiSelectComboBox_UIView.h in Resources */ = {isa = PBXBuildFile; fileRef = 3BD366341B6EF0FA004056FD /* do_MultiSelectComboBox_UIView.h */; };
 		A44BC6701AEE005E001580AA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A44BC66F1AEE005E001580AA /* main.m */; };
 		A44BC6731AEE005E001580AA /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A44BC6721AEE005E001580AA /* AppDelegate.m */; };
 		A44BC6761AEE005E001580AA /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A44BC6751AEE005E001580AA /* ViewController.m */; };
@@ -59,6 +62,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 16;
 			files = (
+				7744CCEF1D4AFEFE00150CAA /* do_MultiSelectComboBox.bundle in CopyFiles */,
 				3BD366441B6EF75E004056FD /* do_MultiSelectComboBox_IView.h in CopyFiles */,
 				3BD366451B6EF75E004056FD /* do_MultiSelectComboBox_UIModel.h in CopyFiles */,
 				3BD366461B6EF75E004056FD /* do_MultiSelectComboBox_UIView.h in CopyFiles */,
@@ -489,6 +493,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				778B2BBF1D48C08B00F76D4F /* do_MultiSelectComboBox_UIModel.h in Resources */,
+				778B2BC01D48C08B00F76D4F /* do_MultiSelectComboBox_UIView.h in Resources */,
 				A4A1A01D1AF0F83700D835A5 /* do_Test.json in Resources */,
 				A44BC67B1AEE005E001580AA /* Images.xcassets in Resources */,
 			);
@@ -662,6 +668,7 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = do_MultiSelectComboBox;
@@ -673,6 +680,7 @@
 		A44BC7C41AEE19CD001580AA /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = do_MultiSelectComboBox;
 				SKIP_INSTALL = YES;
