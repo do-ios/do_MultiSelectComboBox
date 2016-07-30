@@ -197,7 +197,7 @@
     _indexs = [NSMutableArray arrayWithArray:tempArray];
     NSMutableArray *changeIndex = [NSMutableArray array];
     for (NSString * index in _indexs) {
-        if (0 <=[index integerValue] && [index integerValue] <= _items.count && ![index isEqualToString:@""]) {
+        if (0 <=[index integerValue] && [index integerValue] < _items.count && ![index isEqualToString:@""]) {
             [changeIndex addObject:index];
         }
     }

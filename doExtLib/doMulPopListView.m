@@ -64,6 +64,8 @@
     headerBtn.backgroundColor = [UIColor whiteColor];
     [headerBtn addTarget:self action:@selector(btnComp:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:headerBtn];
+    
+    [super layoutSubviews];
 }
 - (void)setCellHeight:(CGFloat)cellHeight
 {
